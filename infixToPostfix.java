@@ -8,7 +8,7 @@ public class infixToPostfix {
         //Input: 1 String, an expression of numbers and operators
         // 4 * (24/2 + (9-5)/3), Use this for a test case
 
-        //Process to Print: Read in the input and go character by character
+        //Process to Print: Read in thie input and go character by character
         //If the item is not an integer or space, put it in the operator stack
         //If the item is an operand, put it onto the string and put a space
             //if the following item is also an operand, concatonate it to the prior until the next item is not
