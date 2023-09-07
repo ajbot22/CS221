@@ -5,6 +5,7 @@ public class infixToPostfix {
         Stack operatorStack = new Stack();
         HashMap<String, Integer> precedenceHash = new HashMap<String, Integer>();
         StringBuilder postfixString = new StringBuilder();
+        int finalValue;
         //Input: 1 String, an expression of numbers and operators
         // 4 * (24/2 + (9-5)/3), Use this for a test case
 
