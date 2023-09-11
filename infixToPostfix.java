@@ -5,6 +5,7 @@ import javax.swing.JOptionPane;
 public class infixToPostfix {
     public static void main(String[] args){
         Stack operatorStack = new Stack();
+        Stack valueStack = new Stack();
         HashMap<Character, Integer> precedenceHash = new HashMap<Character, Integer>(){{
             put('(',5);
             put(')',5);
@@ -57,7 +58,12 @@ public class infixToPostfix {
             }
         }
         //Process to Evaluate: Go character by character through the postfix string
-            //Push operands into the stack
+            for(int l=0;l<postfixString.length();l++){
+                char value = infix.charAt(l);
+                //Push operands into the stack
+                if(Integer.parseInt(value))
+                    valueStack.push(value);
+            }
             //Execute operators on the top two items of the stack in the order 2nd item opr 1st item
             //Top to check item, store it in a variable, pop. Do this twice then push the result
     }
