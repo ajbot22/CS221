@@ -63,7 +63,7 @@ public class infixToPostfix {
         for(int l=0;l<postfixString.length();l++){
         char value = infix.charAt(l);
             //Push operands into the stack
-            if(!Character.isDigit(value))
+            if(!Character.isDigit(Integer.parseInt(value)))
                 valueStack.push(value);
             else{
                 //Execute operators on the top two items of the stack in the order 2nd item opr 1st item
