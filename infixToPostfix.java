@@ -17,6 +17,8 @@ public class infixToPostfix {
         }};
         StringBuilder postfixString = new StringBuilder();
         int finalValue;
+        int temp1;
+        int temp2;
         Boolean pushedNum = false;
 
         //Input: 1 String, an expression of numbers and operators        
@@ -58,13 +60,31 @@ public class infixToPostfix {
             }
         }
         //Process to Evaluate: Go character by character through the postfix string
-            for(int l=0;l<postfixString.length();l++){
-                char value = infix.charAt(l);
-                //Push operands into the stack
-                if(Integer.parseInt(value))
-                    valueStack.push(value);
+        for(int l=0;l<postfixString.length();l++){
+        char value = infix.charAt(l);
+            //Push operands into the stack
+            if(!Character.isDigit(value))
+                valueStack.push(value);
+            else{
+                //Execute operators on the top two items of the stack in the order 2nd item opr 1st item
+                //Top to check item, store it in a variable, pop. Do this twice then push the result
+                temp1 = valueStack.pop();
+                temp2 = valueStack.pop();
+                switch(value){
+                    case'*':valueStack.push((char)(temp2*temp1));
+                            break;
+                    case'/':valueStack.push((char)(temp2/temp1));
+                            break;
+                    case'%':valueStack.push((char)(temp2%temp1));
+                            break;
+                    case'+':valueStack.push((char)(temp2+temp1));
+                            break;
+                    case'-':valueStack.push((char)(temp2-temp1));
+                            break;
+                }
             }
-            //Execute operators on the top two items of the stack in the order 2nd item opr 1st item
-            //Top to check item, store it in a variable, pop. Do this twice then push the result
+        }
+
     }
 }
+

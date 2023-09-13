@@ -22,6 +22,10 @@ public class Stack {
     public boolean empty(){
         return sp == -1;
     }
+
+    public char get(int index){
+        return stack[index];
+    }
 }
 
 //Hi
