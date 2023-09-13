@@ -16,7 +16,6 @@ public class infixToPostfix {
             put('-',1);
         }};
         StringBuilder postfixString = new StringBuilder();
-        int finalValue;
         int temp1;
         int temp2;
         Boolean pushedNum = false;
@@ -83,6 +82,9 @@ public class infixToPostfix {
                             break;
                 }
             }
+            if(l==postfixString.length())
+                while(!valueStack.empty())
+                    System.out.println(valueStack.pop());
         }
 
     }
