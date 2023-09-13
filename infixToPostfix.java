@@ -3,6 +3,20 @@ import java.util.*;
 import javax.swing.JOptionPane;
 
 public class infixToPostfix {
+
+    public static boolean highestPrec(String infix, int currentIndex, HashMap<Character, Integer> precedenceHash, char value){
+        /*
+         * Purpose: Check if the given character value is the highest precedence either until the end of line or next close parenthesis with precedence determined by a hashmap of key-value pairs of characters and their precedence weight
+         * Variables:
+         * infix- A string expression for the infix value
+         * currentIndex- The current index to start reading the infix expression from (not including that value)
+         * precedenceHash- A hashmap which defines the weighted precedenses of operators contained within it
+         * value- the character value for which precedence comparison is weighted against
+         * Returns: the function should return true of the value is of equal or higher precedence to every operator after the defined index in the infix expression up to either the end of line or first close parenthesis
+         */
+        return false;
+    }
+
     public static void main(String[] args){
         Stack operatorStack = new Stack();
         Stack valueStack = new Stack();
@@ -18,7 +32,7 @@ public class infixToPostfix {
         StringBuilder postfixString = new StringBuilder();
         int temp1;
         int temp2;
-        Boolean pushedNum = false;
+        boolean operatorToPlace = false;
 
         //Input: 1 String, an expression of numbers and operators        
         //Process to Print: Read in thie input and go character by character
@@ -36,23 +50,43 @@ public class infixToPostfix {
                 //i will be any char but a number, dont want to skip checking it to be an operator
                 i--;
                 postfixString.append(' ');
-                //Check for 3 things on putting a number in the string
-                    //Is there a number behind it
-                    //Is there an operator in the stack
-                    //If there is, is the next operator lower or equal precedence then the one in the stack
-                        //If not, push the higher precedence operator to the stack
-                    //If these are all true, pop the operator out of the stack and put it on the line
-                
-                //Set this flag to be true after all checks for the pushed number have been done
-                //The flag exists to check if a number was just pushed when pushing a new number
-                pushedNum = true;
+                //If there is an operator that should be placed before adding new numbers, check for that now
+                if(operatorToPlace){
+                    do{
+                        //pop top of stack out and place it into the postfix string 
+                        postfixString.append(operatorStack.pop());
+                        postfixString.append(' ');
+                    }while(operatorStack.top() != '(' && highestPrec(infix,i,precedenceHash, operatorStack.top())); //check if condition is true for the next top of head aslong as that is not a parenthesis
+                    operatorToPlace = false;
+                }
             }
-            //If the item is not an integer or space, put it in the operator stack
+            //If the item is not an integer or space, check if it is an operator (in hashmap) and if so, either stack it or place the operator
             else{
                 for(int j = 0; j < keyArray.length; j++){
                     if(item == (char)keyArray[j]){
-                        operatorStack.push(item);
-                        pushedNum = false;
+                        //Check for each operator
+                        //Is it an open parenthesis
+                            //If so, use true for the boolean flag for the method
+                        //Is it a close parenthesis
+                            //If so, decrement the open counter by 1
+                        //Is the operator equal or higher or equal precedence to all remaining operators in the text or there are no more operators in the text
+                            //if inside a parenthesis, you check for all remaining operators before the next close parenthesis
+                        //If the method returns true, do not stack the operator but instead place the next number and then it in the text, elsewise stack it
+                            //Also repeat this for each next item at the top of the stack until it is either a parenthesis or no longer the highest precedence in its context
+                        if(item == '('){
+                            operatorToPlace = false;
+                            operatorStack.push(item);
+                        }
+                        else if(item == ')'){//If you are reaching a closed parenthesis, then all the operators before it in the stack must have been popped already so the top of the stack should be the open parenthesis
+                            operatorStack.pop();
+                        } 
+                        else if(highestPrec(infix,i,precedenceHash, item)){
+                            operatorToPlace = true;
+                            operatorStack.push(item);
+                        }
+                        else{
+                            operatorStack.push(item);
+                        }
                         break;
                     }
                 }
@@ -90,3 +124,11 @@ public class infixToPostfix {
     }
 }
 
+                //Check for 3 things on putting a number in the string
+                    //Is there an operator in the stack that can be executed (not a parenthesis)
+                    //Is the top operator in the stack of equal or higher precedence to all remaining operators in the text or there are no more operators in the text
+                    //Is there a number behind it to operate on
+                //If there is an open parenthesis present in the stack, treat these rules all from the bounds of those parenthesis
+                    //Number pushed since placing open, operator in the stack besides the open, top operator in the stack greater precedence than all before not including the close
+                //If these are all true, pop the operator out of the stack and put it on the line, elsewise continue reading
+              
