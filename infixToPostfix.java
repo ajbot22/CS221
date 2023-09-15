@@ -6,15 +6,23 @@ public class infixToPostfix {
 
     public static boolean highestPrec(String infix, int currentIndex, HashMap<Character, Integer> precedenceHash, char value){
         /*
-         * Purpose: Check if the given character value is the highest precedence either until the end of line or next close parenthesis with precedence determined by a hashmap of key-value pairs of characters and their precedence weight
+         * Purpose: Check if the given character value is the highest precedence either until the end of line or next close 
+           parenthesis with precedence determined by a hashmap of key-value pairs of characters and their precedence weight
          * Variables:
          * infix- A string expression for the infix value
          * currentIndex- The current index to start reading the infix expression from (not including that value)
          * precedenceHash- A hashmap which defines the weighted precedenses of operators contained within it
          * value- the character value for which precedence comparison is weighted against
-         * Returns: the function should return true of the value is of equal or higher precedence to every operator after the defined index in the infix expression up to either the end of line or first close parenthesis
+         * Returns: the function should return true of the value is of equal or higher precedence to every operator after 
+           the defined index in the infix expression up to either the end of line or first close parenthesis
          */
-        return false;
+        while(infix.charAt(currentIndex)!=')' || currentIndex==infix.length()){
+            currentIndex++;
+            if(precedenceHash[value]>=precedenceHash[infix.charAt(currentIndex)])
+                continue;
+            else return false;
+        }
+        return true;
     }
 
     public static void main(String[] args){
@@ -96,7 +104,7 @@ public class infixToPostfix {
         for(int l=0;l<postfixString.length();l++){
         char value = infix.charAt(l);
             //Push operands into the stack
-            if(!Character.isDigit(Integer.parseInt(value)))
+            if(Character.isDigit(value))
                 valueStack.push(value);
             else{
                 //Execute operators on the top two items of the stack in the order 2nd item opr 1st item
