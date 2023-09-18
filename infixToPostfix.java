@@ -18,7 +18,7 @@ public class infixToPostfix {
          */
         while(infix.charAt(currentIndex)!=')' || currentIndex==infix.length()){
             currentIndex++;
-            if(precedenceHash[value]>=precedenceHash[infix.charAt(currentIndex)])
+            if(precedenceHash.get(value)>=precedenceHash.get(infix.charAt(currentIndex)))
                 continue;
             else return false;
         }
