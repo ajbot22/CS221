@@ -24,7 +24,6 @@ public class infixToPostfix {
         }
         return true;
     }
-
     public static void main(String[] args){
         Stack operatorStack = new Stack();
         Stack valueStack = new Stack();
