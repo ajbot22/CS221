@@ -63,7 +63,7 @@ public class infixToPostfix {
                         //pop top of stack out and place it into the postfix string 
                         postfixString.append(operatorStack.pop());
                         postfixString.append(' ');
-                    }while(operatorStack.top() != '(' && highestPrec(infix,i,precedenceHash, operatorStack.top())); //check if condition is true for the next top of head aslong as that is not a parenthesis
+                    }while(!operatorStack.empty() && operatorStack.top() != '(' && highestPrec(infix,i,precedenceHash, operatorStack.top())); //check if condition is true for the next top of head aslong as that is not a parenthesis
                     operatorToPlace = false;
                 }
             }
@@ -86,11 +86,11 @@ public class infixToPostfix {
                         }
                         else if(item == ')'){//If you are reaching a closed parenthesis, then all the operators before it in the stack must have been popped already so the top of the stack should be the open parenthesis
                             operatorStack.pop();
-                        } 
+                        }
                         else if(highestPrec(infix,i,precedenceHash, item)){
                             operatorToPlace = true;
                             operatorStack.push(item);
-                        }
+                        } 
                         else{
                             operatorStack.push(item);
                         }
@@ -99,6 +99,7 @@ public class infixToPostfix {
                 }
             }
         }
+        System.out.println(postfixString);
         //Process to Evaluate: Go character by character through the postfix string
         for(int l=0;l<postfixString.length();l++){
         char value = infix.charAt(l);
@@ -130,12 +131,3 @@ public class infixToPostfix {
 
     }
 }
-
-                //Check for 3 things on putting a number in the string
-                    //Is there an operator in the stack that can be executed (not a parenthesis)
-                    //Is the top operator in the stack of equal or higher precedence to all remaining operators in the text or there are no more operators in the text
-                    //Is there a number behind it to operate on
-                //If there is an open parenthesis present in the stack, treat these rules all from the bounds of those parenthesis
-                    //Number pushed since placing open, operator in the stack besides the open, top operator in the stack greater precedence than all before not including the close
-                //If these are all true, pop the operator out of the stack and put it on the line, elsewise continue reading
-              
