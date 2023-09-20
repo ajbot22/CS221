@@ -18,7 +18,9 @@ public class infixToPostfix {
          */
         while(infix.charAt(currentIndex)!=')' || currentIndex==infix.length()){
             currentIndex++;
-            if(precedenceHash.get(value)>=precedenceHash.get(infix.charAt(currentIndex)))
+            //System.out.println(currentIndex+"");
+            //System.out.println(infix.charAt(currentIndex));
+            if(!precedenceHash.containsKey(infix.charAt(currentIndex)) || precedenceHash.get(value)>=precedenceHash.get(infix.charAt(currentIndex)))
                 continue;
             else return false;
         }
@@ -46,6 +48,8 @@ public class infixToPostfix {
         String infix = JOptionPane.showInputDialog("Enter Infix");
         for(int i = 0; i < infix.length(); i++){
             char item = infix.charAt(i);
+            //System.out.println(i);
+            //System.out.println("charat: "+item);
             Object[] keyArray = precedenceHash.keySet().toArray();
             //If the item is an operand, put it onto the string and put a space
             if(Character.isDigit(item)){
