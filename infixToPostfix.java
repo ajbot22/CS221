@@ -13,16 +13,19 @@ public class infixToPostfix {
          * currentIndex- The current index to start reading the infix expression from (not including that value)
          * precedenceHash- A hashmap which defines the weighted precedenses of operators contained within it
          * value- the character value for which precedence comparison is weighted against
-         * Returns: the function should return true of the value is of equal or higher precedence to every operator after 
+         * Returns: the function should return true if the value is of equal or higher precedence to every operator after 
            the defined index in the infix expression up to either the end of line or first close parenthesis
          */
-        while(infix.charAt(currentIndex)!=')' || currentIndex==infix.length()){
-            currentIndex++;
+        while(infix.charAt(currentIndex)!=')'){
             //System.out.println(currentIndex+"");
+            System.out.println(value);
+            currentIndex++;
+            if(currentIndex == infix.length()-1) break;
+            if(infix.charAt(currentIndex) == ')') break;
             //System.out.println(infix.charAt(currentIndex));
-            if(!precedenceHash.containsKey(infix.charAt(currentIndex)) || precedenceHash.get(value)>=precedenceHash.get(infix.charAt(currentIndex)))
-                continue;
-            else return false;
+            if(precedenceHash.containsKey(infix.charAt(currentIndex)) && precedenceHash.get(value)<precedenceHash.get(infix.charAt(currentIndex)))
+                return false;
+            //else {return false;}
         }
         return true;
     }
@@ -42,7 +45,9 @@ public class infixToPostfix {
         int temp1;
         int temp2;
         boolean operatorToPlace = false;
-
+        //Test Case 1: (44-23)*2
+        //Test Case 2: 55+3
+        //Test Case 3: 4+(5*(66-2/2))
         //Input: 1 String, an expression of numbers and operators        
         //Process to Print: Read in thie input and go character by character
         String infix = JOptionPane.showInputDialog("Enter Infix");
@@ -105,6 +110,10 @@ public class infixToPostfix {
                 }
             }
         }
+        //while(!operatorStack.empty()){
+          //  postfixString.append(operatorStack.top());
+            //operatorStack.pop();
+        //}
         System.out.println(postfixString);
         //Process to Evaluate: Go character by character through the postfix string
         for(int l=0;l<postfixString.length();l++){
