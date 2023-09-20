@@ -92,10 +92,12 @@ public class infixToPostfix {
                             operatorStack.pop();
                         }
                         else if(highestPrec(infix,i,precedenceHash, item)){
+                            System.out.println("Test A");
                             operatorToPlace = true;
                             operatorStack.push(item);
                         } 
                         else{
+                            System.out.println("Test B");
                             operatorStack.push(item);
                         }
                         break;
