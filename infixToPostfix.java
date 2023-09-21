@@ -4,34 +4,27 @@ import javax.swing.JOptionPane;
 
 public class infixToPostfix {
 
-    public static boolean highestPrec(String infix, int currentIndex, HashMap<Character, Integer> precedenceHash, char value){
+    public static StringBuilder highestPrec(Stack operatorStack, HashMap<Character, Integer> precedenceHash, char value, StringBuilder postfixString){
         /*
-         * Purpose: Check if the given character value is the highest precedence either until the end of line or next close 
-           parenthesis with precedence determined by a hashmap of key-value pairs of characters and their precedence weight
-         * Variables:
-         * infix- A string expression for the infix value
-         * currentIndex- The current index to start reading the infix expression from (not including that value)
-         * precedenceHash- A hashmap which defines the weighted precedenses of operators contained within it
-         * value- the character value for which precedence comparison is weighted against
-         * Returns: the function should return true if the value is of equal or higher precedence to every operator after 
-           the defined index in the infix expression up to either the end of line or first close parenthesis
+         * Method should take the operator stack, the precedense hashmap, the value being checked, and the postfix string
+         * It will comb through the operator stack, popping and appending anything of higher or equal precedence until the end or a open parenthesis is hit
+         * Then it will return the postfix string and back in the main method the value will be added to the stack
          */
-        while(infix.charAt(currentIndex)!=')'){
-            //System.out.println(currentIndex+"");
-            System.out.println(value);
-            currentIndex++;
-            if(currentIndex == infix.length()-1) break;
-            if(infix.charAt(currentIndex) == ')') break;
-            //System.out.println(infix.charAt(currentIndex));
-            if(precedenceHash.containsKey(infix.charAt(currentIndex)) && precedenceHash.get(value)<precedenceHash.get(infix.charAt(currentIndex)))
-                return false;
-            //else {return false;}
+        for(int i = 0; i < operatorStack.sp && operatorStack.top() != '('; i++){
+            if(precedenceHash.containsKey(value) && precedenceHash.get(value)<=operatorStack.top()){
+                postfixString.append(operatorStack.top());
+                postfixString.append(' ');
+                operatorStack.pop();
+                i--;
+            }
         }
-        return true;
+        return postfixString;
     }
     public static void main(String[] args){
         Stack operatorStack = new Stack();
         Stack valueStack = new Stack();
+        int temp1;
+        int temp2;
         HashMap<Character, Integer> precedenceHash = new HashMap<Character, Integer>(){{
             put('(',5);
             put(')',5);
@@ -42,9 +35,6 @@ public class infixToPostfix {
             put('-',1);
         }};
         StringBuilder postfixString = new StringBuilder();
-        int temp1;
-        int temp2;
-        boolean operatorToPlace = false;
         //Test Case 1: (44-23)*2
         //Test Case 2: 55+3
         //Test Case 3: 4+(5*(66-2/2))
@@ -67,42 +57,23 @@ public class infixToPostfix {
                 i--;
                 postfixString.append(' ');
                 //If there is an operator that should be placed before adding new numbers, check for that now
-                if(operatorToPlace){
-                    do{
-                        //pop top of stack out and place it into the postfix string 
-                        postfixString.append(operatorStack.pop());
-                        postfixString.append(' ');
-                    }while(!operatorStack.empty() && operatorStack.top() != '(' && highestPrec(infix,i,precedenceHash, operatorStack.top())); //check if condition is true for the next top of head aslong as that is not a parenthesis
-                    operatorToPlace = false;
-                }
             }
             //If the item is not an integer or space, check if it is an operator (in hashmap) and if so, either stack it or place the operator
             else{
                 for(int j = 0; j < keyArray.length; j++){
                     if(item == (char)keyArray[j]){
                         //Check for each operator
-                        //Is it an open parenthesis
-                            //If so, use true for the boolean flag for the method
-                        //Is it a close parenthesis
-                            //If so, decrement the open counter by 1
-                        //Is the operator equal or higher or equal precedence to all remaining operators in the text or there are no more operators in the text
-                            //if inside a parenthesis, you check for all remaining operators before the next close parenthesis
-                        //If the method returns true, do not stack the operator but instead place the next number and then it in the text, elsewise stack it
-                            //Also repeat this for each next item at the top of the stack until it is either a parenthesis or no longer the highest precedence in its context
                         if(item == '('){
-                            operatorToPlace = false;
                             operatorStack.push(item);
                         }
                         else if(item == ')'){//If you are reaching a closed parenthesis, then all the operators before it in the stack must have been popped already so the top of the stack should be the open parenthesis
-                            operatorStack.pop();
+                            while(operatorStack.top() != '('){
+                                postfixString = highestPrec(operatorStack, precedenceHash, operatorStack.top(), postfixString);
+                            }
+                            operatorStack.pop();// will delete the open parenthesis
                         }
-                        else if(highestPrec(infix,i,precedenceHash, item)){
-                            System.out.println("Test A");
-                            operatorToPlace = true;
-                            operatorStack.push(item);
-                        } 
                         else{
-                            System.out.println("Test B");
+                            postfixString = highestPrec(operatorStack, precedenceHash, item, postfixString);
                             operatorStack.push(item);
                         }
                         break;
@@ -110,12 +81,15 @@ public class infixToPostfix {
                 }
             }
         }
-        //while(!operatorStack.empty()){
-          //  postfixString.append(operatorStack.top());
-            //operatorStack.pop();
-        //}
+        while(!operatorStack.empty()){
+            postfixString.append(operatorStack.top());
+            postfixString.append(' ');
+            operatorStack.pop();
+        }
+        System.out.println(infix);
         System.out.println(postfixString);
         //Process to Evaluate: Go character by character through the postfix string
+        /* 
         for(int l=0;l<postfixString.length();l++){
         char value = infix.charAt(l);
             //Push operands into the stack
@@ -143,6 +117,6 @@ public class infixToPostfix {
                 while(!valueStack.empty())
                     System.out.println(valueStack.pop());
         }
-
+    */
     }
 }
