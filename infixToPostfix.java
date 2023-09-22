@@ -3,146 +3,126 @@ import java.util.*;
 import javax.swing.JOptionPane;
 
 public class infixToPostfix {
-
-    public static boolean highestPrec(String infix, int currentIndex, HashMap<Character, Integer> precedenceHash, char value){
-        /*
-         * Purpose: Check if the given character value is the highest precedence either until the end of line or next close 
-           parenthesis with precedence determined by a hashmap of key-value pairs of characters and their precedence weight
-         * Variables:
-         * infix- A string expression for the infix value
-         * currentIndex- The current index to start reading the infix expression from (not including that value)
-         * precedenceHash- A hashmap which defines the weighted precedenses of operators contained within it
-         * value- the character value for which precedence comparison is weighted against
-         * Returns: the function should return true if the value is of equal or higher precedence to every operator after 
-           the defined index in the infix expression up to either the end of line or first close parenthesis
-         */
-        while(infix.charAt(currentIndex)!=')'){
-            //System.out.println(currentIndex+"");
-            System.out.println(value);
-            currentIndex++;
-            if(currentIndex == infix.length()-1) break;
-            if(infix.charAt(currentIndex) == ')') break;
-            //System.out.println(infix.charAt(currentIndex));
-            if(precedenceHash.containsKey(infix.charAt(currentIndex)) && precedenceHash.get(value)<precedenceHash.get(infix.charAt(currentIndex)))
-                return false;
-            //else {return false;}
-        }
-        return true;
+    public static void main(String[] args) {
+        Stack<Character> operatorStack = new Stack<Character>();
+        Stack<Double> valueStack = new Stack<Double>();
+        String infix = JOptionPane.showInputDialog("Enter Infix: ");
+        postfixEvaluator(infixConverter(infix,operatorStack),valueStack);
     }
-    public static void main(String[] args){
-        Stack operatorStack = new Stack();
-        Stack valueStack = new Stack();
-        HashMap<Character, Integer> precedenceHash = new HashMap<Character, Integer>(){{
-            put('(',5);
-            put(')',5);
-            put('*',3);
-            put('/',3);
-            put('%',3);
-            put('+',1);
-            put('-',1);
-        }};
-        StringBuilder postfixString = new StringBuilder();
-        int temp1;
-        int temp2;
-        boolean operatorToPlace = false;
-        //Test Case 1: (44-23)*2
-        //Test Case 2: 55+3
-        //Test Case 3: 4+(5*(66-2/2))
-        //Input: 1 String, an expression of numbers and operators        
-        //Process to Print: Read in thie input and go character by character
-        String infix = JOptionPane.showInputDialog("Enter Infix");
-        for(int i = 0; i < infix.length(); i++){
-            char item = infix.charAt(i);
-            //System.out.println(i);
-            //System.out.println("charat: "+item);
-            Object[] keyArray = precedenceHash.keySet().toArray();
-            //If the item is an operand, put it onto the string and put a space
-            if(Character.isDigit(item)){
-                postfixString.append(item);
-                //if the following item is also an operand, concatonate it to the prior until the next item is not
-                while(++i < infix.length() && Character.isDigit(infix.charAt(i))){
-                    postfixString.append(item);
-                }
-                //i will be any char but a number, dont want to skip checking it to be an operator
-                i--;
-                postfixString.append(' ');
-                //If there is an operator that should be placed before adding new numbers, check for that now
-                if(operatorToPlace){
-                    do{
-                        //pop top of stack out and place it into the postfix string 
-                        postfixString.append(operatorStack.pop());
-                        postfixString.append(' ');
-                    }while(!operatorStack.empty() && operatorStack.top() != '(' && highestPrec(infix,i,precedenceHash, operatorStack.top())); //check if condition is true for the next top of head aslong as that is not a parenthesis
-                    operatorToPlace = false;
-                }
-            }
-            //If the item is not an integer or space, check if it is an operator (in hashmap) and if so, either stack it or place the operator
-            else{
-                for(int j = 0; j < keyArray.length; j++){
-                    if(item == (char)keyArray[j]){
-                        //Check for each operator
-                        //Is it an open parenthesis
-                            //If so, use true for the boolean flag for the method
-                        //Is it a close parenthesis
-                            //If so, decrement the open counter by 1
-                        //Is the operator equal or higher or equal precedence to all remaining operators in the text or there are no more operators in the text
-                            //if inside a parenthesis, you check for all remaining operators before the next close parenthesis
-                        //If the method returns true, do not stack the operator but instead place the next number and then it in the text, elsewise stack it
-                            //Also repeat this for each next item at the top of the stack until it is either a parenthesis or no longer the highest precedence in its context
-                        if(item == '('){
-                            operatorToPlace = false;
-                            operatorStack.push(item);
-                        }
-                        else if(item == ')'){//If you are reaching a closed parenthesis, then all the operators before it in the stack must have been popped already so the top of the stack should be the open parenthesis
-                            operatorStack.pop();
-                        }
-                        else if(highestPrec(infix,i,precedenceHash, item)){
-                            System.out.println("Test A");
-                            operatorToPlace = true;
-                            operatorStack.push(item);
-                        } 
-                        else{
-                            System.out.println("Test B");
-                            operatorStack.push(item);
-                        }
-                        break;
-                    }
-                }
-            }
-        }
-        //while(!operatorStack.empty()){
-          //  postfixString.append(operatorStack.top());
-            //operatorStack.pop();
-        //}
-        System.out.println(postfixString);
-        //Process to Evaluate: Go character by character through the postfix string
-        for(int l=0;l<postfixString.length();l++){
-        char value = infix.charAt(l);
-            //Push operands into the stack
-            if(Character.isDigit(value))
-                valueStack.push(value);
-            else{
-                //Execute operators on the top two items of the stack in the order 2nd item opr 1st item
-                //Top to check item, store it in a variable, pop. Do this twice then push the result
-                temp1 = valueStack.pop();
-                temp2 = valueStack.pop();
-                switch(value){
-                    case'*':valueStack.push((char)(temp2*temp1));
-                            break;
-                    case'/':valueStack.push((char)(temp2/temp1));
-                            break;
-                    case'%':valueStack.push((char)(temp2%temp1));
-                            break;
-                    case'+':valueStack.push((char)(temp2+temp1));
-                            break;
-                    case'-':valueStack.push((char)(temp2-temp1));
-                            break;
-                }
-            }
-            if(l==postfixString.length())
-                while(!valueStack.empty())
-                    System.out.println(valueStack.pop());
-        }
 
+    public static StringBuilder infixConverter(String infix, Stack<Character> operatorStack){
+        StringBuilder postfixExpression = new StringBuilder();
+        // could use a switch statement in a method, but this is much cleaner
+        // set a precedence value to each operator
+        HashMap<Character, Integer> precedenceHash = new HashMap<Character, Integer>() {
+            {
+                put('*', 2);
+                put('/', 2);
+                put('%', 2);
+                put('+', 1);
+                put('-', 1);
+                put('(', 0);
+                put(')', 0);
+            }
+        };
+        for (int i = 0; i < infix.length(); i++) {
+            char value = infix.charAt(i);
+            switch (value) {
+                case' ':
+                    break;
+                case '*':
+                case '/':
+                case '%':
+                case '+':
+                case '-':
+                    // ----------------everything from here on out refers to an operator----------------
+                    // if operator stack is empty push it
+                    if (operatorStack.empty())
+                        operatorStack.push(value);
+                    else {
+                    
+                    // if precedence of value is greater than the precedence of top of the operator stack, push it
+                        if (precedenceHash.get(value) > precedenceHash.get(operatorStack.peek()))
+                            operatorStack.push(value);
+                        // if precedence of value is less than or equal to the precedence of top of operator stack,
+                        // pop operators into operatorstack until precedence of top of operator stack is lower than the
+                        // original value's precedent
+                        else if (precedenceHash.get(value) <= precedenceHash.get(operatorStack.peek())) {
+                            while (!operatorStack.empty() 
+                                    && precedenceHash.containsKey(operatorStack.peek()) 
+                                    && precedenceHash.get(value) <= precedenceHash.get(operatorStack.peek())) 
+                            {
+                                postfixExpression.append(operatorStack.pop()+" ");
+                            }
+                            operatorStack.push(value);
+                        }
+                    }
+                    break;
+                    
+                case ')':
+                    // pop operators off the stack until you encounter an open parenthesis, and pop that out of the stack
+                    while (!operatorStack.empty() && operatorStack.peek() != '(') postfixExpression.append(operatorStack.pop()+" ");
+                    operatorStack.pop();
+                    break;
+                case '(':
+                    // push no matter what
+                    operatorStack.push(value);
+                    break;
+                default:
+                    // operand
+                    while (i < infix.length() && Character.isDigit(infix.charAt(i))) {
+                        postfixExpression.append(infix.charAt(i));
+                        i++;
+                    }
+                    postfixExpression.append(' '); 
+                    i--; // account for extra loop
+                    break;
+            }
+        }
+        //pop the rest of the stack to get rest of operators left in the stack
+        while (!operatorStack.empty()) {
+            postfixExpression.append(operatorStack.pop()+" ");
+        }
+        // print and return the postfix expression
+        System.out.println("Postfix Expression: " + postfixExpression);
+        return postfixExpression;
+    }
+
+    public static Double postfixEvaluator(StringBuilder postfix, Stack<Double> valueStack){
+        Double postfixEval;
+        String[] postfixArray = postfix.toString().split(" "); //seperate postfix expression
+
+        for(int j=0;j<postfixArray.length;j++){
+            // Manipulating data types to seperate operands and operators
+            String operand = postfixArray[j];
+            char operator = operand.charAt(0);
+            // Push operands into the stack
+            if(Character.isDigit(operator)){
+                //System.out.println("operand: "+Double.parseDouble(operand));
+                valueStack.push(Double.parseDouble(operand));
+            }
+            // Handle operators and arithmetic
+            else{
+                Double temp1 = valueStack.pop();
+                Double temp2 = valueStack.pop();
+                switch(operator){
+                    case'*':valueStack.push(temp2*temp1);
+                        break;
+                    case'/':valueStack.push(temp2/temp1);
+                        break;
+                    case'%':valueStack.push(temp2%temp1);
+                        break;
+                    case'+':valueStack.push(temp2+temp1);
+                        break;
+                    case'-':valueStack.push(temp2-temp1);
+                        break;
+                }
+            }
+            //System.out.println("        Top of stack: "+valueStack.peek());
+        }
+        // pop, print, and return the postfix evaluation
+        postfixEval=valueStack.pop();
+        System.out.println("Evaluated postfix expression: "+ postfixEval);
+        return postfixEval;
     }
 }
