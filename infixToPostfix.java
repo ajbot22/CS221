@@ -84,6 +84,7 @@ public class infixToPostfix {
             postfixExpression.append(operatorStack.pop()+" ");
         }
         // print and return the postfix expression
+        System.out.println("Infix Expression: "+infix);
         System.out.println("Postfix Expression: " + postfixExpression);
         return postfixExpression;
     }
